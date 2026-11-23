@@ -5,6 +5,9 @@ on:
     branches: ["**"]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: windows-latest
@@ -31,3 +34,16 @@ jobs:
           name: Minuteur-setup
           path: src-tauri/target/release/bundle/nsis/*.exe
           if-no-files-found: error
+
+      - name: Publier l'installeur dans une Release (une par version, jamais remplacée)
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VER=$(node -p "require('./package.json').version")
+          if gh release view "v$VER" >/dev/null 2>&1; then
+            echo "Release v$VER existe déjà : rien n'est remplacé. Incrémente la version pour publier."
+            exit 0
+          fi
+          gh release create "v$VER" src-tauri/target/release/bundle/nsis/*.exe \
+            --target "$GITHUB_SHA" --title "Minuteur $VER" --notes "Installeur Windows : lance le .exe, coche « Créer un raccourci sur le bureau » à la fin."

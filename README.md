@@ -5,7 +5,7 @@ Minuteur Windows (Tauri 2, HTML/CSS/JS vanilla), style verre dépoli noir et bla
 ## Fiche projet
 - **Stack** : Tauri 2 + HTML/CSS/JS vanilla (`src/`), Rust minimal (`src-tauri/src/main.rs`)
 - **Identifiant** : `fr.minuteur.app` (ne pas changer, sinon Windows le voit comme une autre app)
-- **Workflow** : `.github/workflows/build-windows.yml` → artifact `Minuteur-setup` (installeur NSIS `.exe`)
+- **Workflow** : `.github/workflows/build-windows.yml` → Release `v<version>` avec l'installeur `Minuteur_<version>_x64-setup.exe` (lien direct), + artifact
 - **Signature** : aucune (pas de certificat Authenticode) → avertissement SmartScreen à l'installation
 - **Version** : `version` dans `package.json`, `src-tauri/Cargo.toml` et `src-tauri/tauri.conf.json` (semver, à incrémenter ensemble)
 - **Données** : `localStorage` de la WebView2 (clé `minuteur.v1`)
