@@ -250,8 +250,8 @@ body:has([data-status="done"]) .ambient i { animation-duration: 5s; opacity: 1; 
 .time {
   display: flex;
   align-items: baseline;
-  font-weight: 200;
-  font-size: 60px;
+  font-weight: 700;
+  font-size: 58px;
   line-height: 1;
   letter-spacing: -2px;
   font-variant-numeric: tabular-nums;
@@ -259,7 +259,7 @@ body:has([data-status="done"]) .ambient i { animation-duration: 5s; opacity: 1; 
   transition: font-size .25s ease;
 }
 
-.time.long { font-size: 44px; letter-spacing: -1.5px; }
+.time.long { font-size: 42px; letter-spacing: -1.5px; }
 
 .colon { opacity: .45; padding: 0 1px; transform: translateY(-.06em); }
 .seg { padding: 2px 3px; border-radius: 12px; transition: background .15s, opacity .2s; }
