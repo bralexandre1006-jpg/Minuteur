@@ -30,7 +30,23 @@
       </svg>
       <div class="readout">
         <div class="time" id="time" aria-live="off">
-          <span class="seg" data-k="h">00</span><span class="colon" data-c="h">:</span><span class="seg" data-k="m">05</span><span class="colon">:</span><span class="seg" data-k="s">00</span>
+          <div class="unit" data-u="h">
+            <button class="step" data-k="h" data-dir="1" aria-label="Plus de heures"><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>
+            <span class="seg" data-k="h">00</span>
+            <button class="step" data-k="h" data-dir="-1" aria-label="Moins de heures"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+          </div>
+          <span class="colon" data-c="h">:</span>
+          <div class="unit" data-u="m">
+            <button class="step" data-k="m" data-dir="1" aria-label="Plus de minutes"><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>
+            <span class="seg" data-k="m">05</span>
+            <button class="step" data-k="m" data-dir="-1" aria-label="Moins de minutes"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+          </div>
+          <span class="colon">:</span>
+          <div class="unit" data-u="s">
+            <button class="step" data-k="s" data-dir="1" aria-label="Plus de secondes"><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>
+            <span class="seg" data-k="s">00</span>
+            <button class="step" data-k="s" data-dir="-1" aria-label="Moins de secondes"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+          </div>
         </div>
         <div class="sub" id="sub"></div>
       </div>

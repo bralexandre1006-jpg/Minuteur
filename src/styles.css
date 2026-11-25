@@ -249,7 +249,7 @@ body:has([data-status="done"]) .ambient i { animation-duration: 5s; opacity: 1; 
 
 .time {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   font-weight: 700;
   font-size: 58px;
   line-height: 1;
@@ -261,9 +261,29 @@ body:has([data-status="done"]) .ambient i { animation-duration: 5s; opacity: 1; 
 
 .time.long { font-size: 42px; letter-spacing: -1.5px; }
 
-.colon { opacity: .45; padding: 0 1px; transform: translateY(-.06em); }
+.colon { opacity: .45; padding: 0 1px; justify-content: center; transform: translateY(-.06em); }
 .seg { padding: 2px 3px; border-radius: 12px; transition: background .15s, opacity .2s; }
-.seg[hidden], .colon[hidden] { display: none; }
+.unit, .colon { display: flex; flex-direction: column; align-items: center; }
+.unit[hidden], .colon[hidden] { display: none; }
+
+.step {
+  width: 44px;
+  height: 0;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  color: var(--fg2);
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transition: height .25s ease, opacity .2s, background .15s, color .15s;
+  touch-action: none;
+}
+
+.step svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+[data-status="idle"] .step { height: 26px; opacity: 1; pointer-events: auto; }
+.step:hover { background: var(--glass-top); color: var(--fg); }
+.step:active { transform: scale(.92); }
 
 [data-status="idle"] .seg { cursor: ns-resize; }
 [data-status="idle"] .seg:hover { background: var(--glass-top); }

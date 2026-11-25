@@ -12,7 +12,7 @@
   const $ = id => document.getElementById(id);
   const shell = $('shell'), prog = $('prog'), timeEl = $('time'), sub = $('sub');
   const btnMain = $('btnMain'), btnReset = $('btnReset'), label = $('label');
-  const segs = { h: timeEl.querySelector('[data-k="h"]'), m: timeEl.querySelector('[data-k="m"]'), s: timeEl.querySelector('[data-k="s"]') };
+  const segs = { h: timeEl.querySelector('.seg[data-k="h"]'), m: timeEl.querySelector('.seg[data-k="m"]'), s: timeEl.querySelector('.seg[data-k="s"]') };
   const colonH = timeEl.querySelector('[data-c="h"]');
 
   const s = load();
@@ -168,7 +168,7 @@
       lastKey = key;
       const idle = s.status === 'idle';
       const showH = idle || h > 0;
-      segs.h.hidden = colonH.hidden = !showH;
+      segs.h.parentElement.hidden = colonH.hidden = !showH;
       timeEl.classList.toggle('long', showH);
       segs.h.textContent = pad(h);
       segs.m.textContent = pad(m);
@@ -180,7 +180,7 @@
       if (s.status === 'running') sub.innerHTML = `${BELL}<span>${clock(s.endAt)}</span>`;
       else if (s.status === 'paused') sub.textContent = 'En pause';
       else if (s.status === 'done') sub.textContent = 'Terminé';
-      else sub.textContent = 'Molette ou clavier pour régler';
+      else sub.textContent = 'Flèches, molette ou clavier';
 
       const t = (h ? `${h}:` : '') + `${h ? pad(m) : m}:${pad(sec)}`;
       const title = s.status === 'running' || s.status === 'paused' ? `${t} · Minuteur` : 'Minuteur';
@@ -219,18 +219,35 @@
   btnMain.addEventListener('click', () => ({ idle: start, running: pause, paused: resume, done: reset })[s.status]());
   btnReset.addEventListener('click', () => (s.status === 'done' ? repeat() : reset()));
 
-  timeEl.addEventListener('wheel', e => {
-    const seg = e.target.closest('.seg');
-    if (!seg || s.status !== 'idle') return;
-    e.preventDefault();
+  function adjust(k, dir, big) {
+    if (s.status !== 'idle') return;
     buf = '';
-    const k = seg.dataset.k, dir = e.deltaY < 0 ? 1 : -1;
     let [h, m, sec] = split(s.setMs);
     if (k === 'h') h = (h + dir + 24) % 24;
-    if (k === 'm') m = (m + dir * (e.shiftKey ? 5 : 1) + 60) % 60;
-    if (k === 's') sec = (sec + dir * (e.shiftKey ? 15 : 5) + 60) % 60;
+    if (k === 'm') m = (m + dir * (big ? 5 : 1) + 60) % 60;
+    if (k === 's') sec = (sec + dir * (big ? 15 : 1) + 60) % 60;
     setParts(h, m, sec);
+  }
+
+  timeEl.addEventListener('wheel', e => {
+    const seg = e.target.closest('.unit');
+    if (!seg || s.status !== 'idle') return;
+    e.preventDefault();
+    adjust(seg.dataset.u, e.deltaY < 0 ? 1 : -1, e.shiftKey);
   }, { passive: false });
+
+  let holdT = 0, holdI = 0;
+  const stopHold = () => { clearTimeout(holdT); clearInterval(holdI); };
+  timeEl.addEventListener('pointerdown', e => {
+    const b = e.target.closest('.step');
+    if (!b || e.button !== 0) return;
+    e.preventDefault();
+    const go1 = () => adjust(b.dataset.k, +b.dataset.dir, false);
+    go1();
+    stopHold();
+    holdT = setTimeout(() => { holdI = setInterval(go1, 70); }, 380);
+  });
+  ['pointerup', 'pointerleave', 'pointercancel', 'blur'].forEach(t => (t === 'blur' ? window : timeEl).addEventListener(t, stopHold));
 
   document.addEventListener('keydown', e => {
     if (e.target === label) {
